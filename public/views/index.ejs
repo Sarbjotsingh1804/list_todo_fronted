@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Todo List</h1>
+    </header>
+
+    <div class="todo-container">
+        <form action="/add" method="POST">
+            <input type="text" name="task" placeholder="Add a new task" required>
+            <select name="priority">
+                <option value="high">High Priority</option>
+                <option value="medium" selected>Medium Priority</option>
+                <option value="low">Low Priority</option>
+            </select>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+
+    <div class="filters">
+        <span>Filter by priority: </span>
+        <a href="/filter/all">All</a>
+        <a href="/filter/high">High</a>
+        <a href="/filter/medium">Medium</a>
+        <a href="/filter/low">Low</a>
+    </div>
+
+    <div class="todo-list">
+        <% todos.forEach(todo => { %>
+            <div class="todo-item priority-<%= todo.priority %> <%= todo.completed ? 'completed' : '' %>">
+                <form action="/toggle/<%= todo.id %>" method="POST" style="display: inline;">
+                    <input type="checkbox" <%= todo.completed ? 'checked' : '' %> 
+                        onchange="this.form.submit()">
+                </form>
+                
+                <span><%= todo.task %></span>
+                
+                <div>
+                    <form action="/edit/<%= todo.id %>" method="POST" style="display: inline;">
+                        <input type="text" name="task" value="<%= todo.task %>" required>
+                        <select name="priority">
+                            <option value="high" <%= todo.priority === 'high' ? 'selected' : '' %>>High</option>
+                            <option value="medium" <%= todo.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+                            <option value="low" <%= todo.priority === 'low' ? 'selected' : '' %>>Low</option>
+                        </select>
+                        <button type="submit">Update</button>
+                    </form>
+                    
+                    <form action="/delete/<%= todo.id %>" method="POST" style="display: inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+    <footer>
+        <p>&copy; <%= new Date().getFullYear() %> Todo List App</p>
+    </footer>
+    </body>
+    </html>
+
